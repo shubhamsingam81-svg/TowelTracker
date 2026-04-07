@@ -32,7 +32,7 @@
             <div class="header-inner">
                 <div class="header-row">
                     <h1 class="app-title">🧺 Towel Tracker</h1>
-                    <button class="icon-btn white" onclick="exportAllData()" title="Export All">
+                    <button class="icon-btn white" onclick="openModal('m-export')" title="Export All">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
                     </button>
                 </div>
@@ -68,9 +68,17 @@
                         <h1 class="entry-title" id="month-hdr-name"></h1>
                         <p class="entry-sub">Select a month</p>
                     </div>
-                    <button class="icon-btn white" onclick="openPartyModal(true)" title="Edit Party">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="icon-btn white" onclick="exportPartyExcel()" title="Export to Excel">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/><path d="M6 6h12v12H6z"/></svg>
+                        </button>
+                        <button class="icon-btn white" onclick="exportPartyPDF()" title="Export to PDF">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V10z"/><path d="M14 2v8h8M9 15h6M9 19h6"/></svg>
+                        </button>
+                        <button class="icon-btn white" onclick="openPartyModal(true)" title="Edit Party">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <div id="party-stats" class="stats-row hidden">
                     <div class="stat-chip"><span class="stat-chip-val" id="ps-months">0</span><span class="stat-chip-lbl">Months</span></div>
@@ -124,12 +132,17 @@
                         <h1 class="entry-title" id="e-title"></h1>
                         <p class="entry-sub" id="e-sub"></p>
                     </div>
-                    <button class="icon-btn white" onclick="openSizeModal(true)" title="Edit Size">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    </button>
-                    <button class="icon-btn white" onclick="shareReport()" title="Share">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg>
-                    </button>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="icon-btn white" onclick="exportSizeExcel()" title="Export to Excel">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/><path d="M6 6h12v12H6z"/></svg>
+                        </button>
+                        <button class="icon-btn white" onclick="exportSizePDF()" title="Export to PDF">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V10z"/><path d="M14 2v8h8M9 15h6M9 19h6"/></svg>
+                        </button>
+                        <button class="icon-btn white" onclick="openSizeModal(true)" title="Edit Size">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
@@ -278,10 +291,44 @@
         </div>
     </div>
 
+    <!-- ========== MODAL: EXPORT OPTIONS ========== -->
+    <div id="m-export" class="modal-bg" onclick="closeBg(event,'m-export')">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <h2 class="modal-h">📊 Export All Data</h2>
+            <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Choose export format for complete dataset</p>
+            <div class="export-options">
+                <button class="export-btn excel-btn" onclick="exportAllDataExcel(); closeModal('m-export')">
+                    <span class="export-icon">📊</span>
+                    <span class="export-label">Export to Excel</span>
+                    <span class="export-desc">.xlsx format</span>
+                </button>
+                <button class="export-btn pdf-btn" onclick="exportAllDataPDF(); closeModal('m-export')">
+                    <span class="export-icon">📄</span>
+                    <span class="export-label">Export to PDF</span>
+                    <span class="export-desc">.pdf format</span>
+                </button>
+            </div>
+            <div class="modal-btns" style="margin-top: 20px;">
+                <button class="btn ghost" onclick="closeModal('m-export')" style="width: 100%;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div id="toast" class="toast"></div>
 
+    <!-- App Scripts -->
     <script src="app.js"></script>
+    
+    <!-- Export Libraries - Using reliable CDN with fallback -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+    
+    <!-- Export functionality -->
+    <script src="export.js"></script>
+    
+    <!-- Service Worker -->
     <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>
 </body>
 </html>
